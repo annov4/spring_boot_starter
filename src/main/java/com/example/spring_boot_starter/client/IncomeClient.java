@@ -1,22 +1,21 @@
 package com.example.spring_boot_starter.client;
 
 import com.example.spring_boot_starter.model.Income;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 @Component
+@RequiredArgsConstructor
 public class IncomeClient {
 
     private final RestTemplate restTemplate;
 
-    @Autowired
-    public IncomeClient(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
-    }
+    @Value("${income.api.url}")
+    private String incomeApiUrl;
 
     public Income getIncomeForUser(Long userId) {
-        String url = "https://66055cd12ca9478ea1801f2e.mockapi.io/api/users/income";
-        Income[] incomes = restTemplate.getForObject(url, Income[].class);
+        Income[] incomes = restTemplate.getForObject(incomeApiUrl, Income[].class);
         if (incomes != null) {
             for (Income income : incomes) {
                 if (income.getUserId() == userId) {
